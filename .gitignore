@@ -1,0 +1,26 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# ALLOWLIST gitignore for the insights ROUTINE repo.
+# This workspace holds customer PII (emails in docs, notebooks, CSVs) and live
+# secrets (.env). To push a clean, PII-free repo for the cloud routine we ignore
+# EVERYTHING by default and re-include only the safe, self-contained framework.
+# `git status` after init must show ONLY insights/ + these support files.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# 1. Ignore everything at the repo root.
+/*
+
+# 2. Re-include only the safe set.
+!/.gitignore
+!/README_ROUTINE.md
+!/requirements-insights.txt
+!/insights/
+
+# 3. Within insights/, drop caches and local-only artifacts.
+insights/__pycache__/
+insights/**/__pycache__/
+
+# Never, under any circumstance:
+.env
+.env.*
+*.pem
+*.key

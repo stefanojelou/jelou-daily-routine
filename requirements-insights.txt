@@ -1,0 +1,5 @@
+pandas
+requests
+clickhouse-connect
+psycopg[binary]
+stripe
