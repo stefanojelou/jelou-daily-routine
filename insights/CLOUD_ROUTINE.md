@@ -25,11 +25,19 @@ them to the ledger, commit, and write the digest.
    note what's deferred.
    - **Strong in Mixpanel:** acquisition funnel, activation timing, usage depth,
      template *events*, device/channel splits, engagement recency.
-   - **Weak/deferred (needs DBs):** real revenue (Stripe), assistant conversation
-     content & cost (Neon), workflow execution internals (ClickHouse). For a
-     monetization day, use *intent* proxies only (`upgrade_cta_clicked`,
-     `credit_topup`, `page_visited_settings_billing`) and label them as intent,
-     not revenue.
+   - **Partial in Mixpanel:** credit-purchase monetization. `credit_topup` carries
+     a real `amount` (~210/quarter, $10 mode; mirrored to `trackCharge`/profile
+     `$transactions`) — you CAN analyze top-up amounts, frequency, and timing by
+     channel/cohort/device. Caveats: it fires *before* checkout redirect
+     (`currency` often unset) so it's pre-settlement *intent-to-pay*, not reconciled
+     revenue; and it's credits only.
+   - **Deferred (needs DBs):** SUBSCRIPTION revenue & MRR (Mixpanel
+     `subscription_purchased` fired ~once/quarter — invisible here; Stripe only),
+     settled/reconciled revenue (Stripe), assistant conversation content & cost
+     (Neon), workflow execution internals (ClickHouse). On a monetization day,
+     lead with credit top-up analysis + intent signals (`upgrade_cta_clicked`,
+     `page_visited_settings_billing`), and explicitly flag subscriptions/MRR as
+     deferred to Stripe.
 
 3. **Query Mixpanel via MCP.** First call **Get-Business-Context**, then
    Run-Query / segmentation / JQL as needed. Project: **Jelou Apps `3842718`**.
