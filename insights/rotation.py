@@ -6,9 +6,11 @@ analysis every day. This module turns a date into a fresh **exploration
 assignment** by combining four independent rotating axes plus the live question
 backlog:
 
-  1. THEME     — a domain focus, one per weekday (7). Backbone of the rotation.
+  1. THEME     — a domain focus (7 of them). Cycles ONE STEP PER RUN (business-day
+                 index), not per weekday — so a weekdays-only schedule still covers
+                 all 7 themes over ~1.5 weeks instead of stranding the weekend ones.
   2. ANGLE     — a specific facet within the theme, rotated by ISO week number so
-                 the same weekday digs a different facet each week.
+                 the same theme digs a different facet on its next visit.
   3. SEGMENT   — a slice-the-data lens (by channel, cohort, geo, device, ...),
                  rotated on a co-prime cycle so THEME×ANGLE×SEGMENT rarely repeats.
   4. TWIST     — a creativity prompt (join two sources, invert the funnel, find
@@ -37,8 +39,10 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 QUESTIONS_PATH = SCRIPT_DIR / "questions.md"
 
-# ── Axis 1: weekday themes ──────────────────────────────────────────────────────
-# Each theme names the backends it leans on and the events/tables to reach for.
+# ── Axis 1: themes ──────────────────────────────────────────────────────────────
+# 7 themes, each naming the backends it leans on and the events/tables to reach
+# for. Selected by a business-day run-index (see _run_index) so the cycle advances
+# one theme per actual run — the weekday labels below are just mnemonic legacy.
 THEMES = {
     0: {  # Monday
         "key": "acquisition",
@@ -176,6 +180,24 @@ def _rng(d: date) -> random.Random:
     return random.Random(seed)
 
 
+# Monday anchor; business days since this advance the theme cycle by 1 per run.
+_RUN_EPOCH = date(2026, 1, 5)
+
+
+def _run_index(d: date) -> int:
+    """Count of business days (Mon-Fri) from the epoch to d — a monotonic run
+    counter so themes cycle one-per-run under a weekdays-only schedule."""
+    lo, hi, sign = (_RUN_EPOCH, d, 1) if d >= _RUN_EPOCH else (d, _RUN_EPOCH, -1)
+    full_weeks, rem = divmod((hi - lo).days, 7)
+    count = full_weeks * 5
+    wd = lo.weekday()
+    for _ in range(rem):
+        if wd < 5:
+            count += 1
+        wd = (wd + 1) % 7
+    return sign * count
+
+
 def _load_questions() -> list[str]:
     if not QUESTIONS_PATH.exists():
         return []
@@ -189,7 +211,7 @@ def _load_questions() -> list[str]:
 
 def assignment_for(d: date | None = None, n_questions: int = 3) -> dict:
     d = d or datetime.now().date()
-    theme = THEMES[d.weekday()]
+    theme = THEMES[_run_index(d) % len(THEMES)]
     rng = _rng(d)
 
     iso_week = d.isocalendar()[1]
