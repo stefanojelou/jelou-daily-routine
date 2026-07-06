@@ -6,6 +6,18 @@ re-reported.
 
 ---
 
+### 2026-07-06 — 🔁 UPDATE — Correction: mobile-signup build-activation is 2.9% (not 0.3%) vs desktop 27%
+
+Run #1 measured node_used with $os=mobile, but node_used is a desktop-only drag action (31,722 desktop vs 128 mobile events), so that ~0.3% was near-tautological. Cohorting on SIGNUP device and counting node_used within 14d on ANY device: mobile signups activate at 2.9% (132/4,536) vs desktop 26.9% (953/3,548). The ~9x structural gap and the paid-is-77%-mobile story hold; the magnitude was overstated ~10x.
+
+- **Metric:** mobile 14d build-activation (node_used) = **2.9%**  (was 0.3%)
+- **Theme/angle:** Retention & churn cohorts — Dead-on-arrival cohort by device — who never activates
+- **Segment:** by device ($os)  ·  **Sources:** mixpanel
+- **Confidence:** high (N=4,536 mobile signups; cohort-by-signup-device, any-device node_used, 14d)
+- **Caveat:** Recent signups (<14d) have a partial window (minor understatement). Paid ~6% is likely similarly understated (~8% cohort-corrected) but still ~half of organic.
+
+---
+
 ### 2026-07-06 — 🆕 NEW — Paid acquisition is 77% mobile → activates at ~5-7% vs 15% organic
 
 Signups with a utm_source (paid, 1,695/8,084 = 21%) are 77% mobile (1,302), vs ~50% mobile for organic. Because mobile can't build, paid channels convert to real building (node_used, 14d) at roughly half the organic rate: Google Ads 7% (52/725), Google 'adwords' 6% (22/370), Meta fb 4% (12/283) / ig 6% (10/172) — vs 15% organic (974/6,389). Paid spend is largely buying dead-on-arrival mobile signups.

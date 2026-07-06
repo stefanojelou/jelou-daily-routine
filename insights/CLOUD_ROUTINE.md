@@ -54,6 +54,16 @@ them to the ledger, commit, and write the digest.
      funnels can straddle both; don't build a clean sequential funnel across
      projects without reconciling `distinct_id`.
    - Report Ns and base rates; flag small-N; correlation is "marks," not "drives."
+   - **Funnel/activation rates must cohort on the ENTRY device/state, and count the
+     outcome event on ANY device** — never match the device at the outcome event.
+     Many actions are device-constrained (e.g. `node_used` is a desktop-only
+     drag-drop: ~31.7k desktop vs ~128 mobile firings). Measuring "mobile
+     activation" as "node_used with $os=mobile" is ~0 BY CONSTRUCTION (tautology),
+     not behavior. Correct method: take users whose `signup_completed` device was
+     mobile, then count who fired the outcome event within the window on any
+     device (JQL `groupByUser`). Example: mobile-signup build-activation is 2.9%
+     (cohort, any-device), not 0.3% (event-device). Same rule for any per-user
+     funnel — cohort on the entry, measure the outcome across devices/sessions.
 
 4. **Decide what's new** and log survivors:
    ```python
