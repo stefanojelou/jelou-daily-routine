@@ -93,15 +93,16 @@ THEMES = {
         "key": "monetization",
         "name": "Monetization & pay-drivers",
         "sources": ["stripe", "mixpanel", "neon"],
-        "focus": "What precedes paying. Stripe charges/subscriptions/credit purchases "
-                 "(real = amount>0); the action sequence before first payment; intent "
-                 "signals upgrade_cta_clicked / credit_topup / page_visited_settings_billing. "
-                 "Revenue truth is Stripe, NOT Mixpanel.",
+        "focus": "What drives conversion & payment. Conversion = the "
+                 "`subscription_changed` event ('converted'); payment/credit purchase = "
+                 "`credit_topup` (carries amount, pre-settlement intent). Intent signals: "
+                 "upgrade_cta_clicked / page_visited_settings_billing. Compare media "
+                 "(utm_source) vs organic. Reconciled revenue/MRR is Stripe-only (deferred).",
         "angles": [
-            "The last action before first payment: what do payers do in the 48h pre-charge?",
-            "Credit top-up vs subscription: which entry point retains/expands better?",
-            "upgrade_cta_clicked → actual charge: conversion of the intent signal, by source.",
-            "Payer vs never-pay lookalikes: matched on activation, what separates the two?",
+            "The last action before first credit_topup: what happens in the 48h before a credit purchase?",
+            "Credit purchase (credit_topup) vs conversion (subscription_changed): which path retains better?",
+            "upgrade_cta_clicked → subscription_changed: conversion of the intent signal, by media source.",
+            "Converted vs never-converted lookalikes: matched on activation, what separates them?",
         ],
     },
     4: {  # Friday

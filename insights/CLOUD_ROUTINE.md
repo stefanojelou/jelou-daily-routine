@@ -11,6 +11,23 @@ Your job each run: surface one or a few **genuinely new** Mixpanel findings abou
 acquisition, activation, in-app usage, or template/engagement behavior — then log
 them to the ledger, commit, and write the digest.
 
+## Vocabulary & canonical metrics (use these EXACT terms and events)
+
+- **media** — a signup attributed to marketing: `signup_completed` carries a
+  `utm_source`. Always say **"media"** (and its complement **"organic"**), NEVER
+  "paid" — "paid" is reserved for revenue/paying customers, so calling media
+  "paid" is confusing.
+- **converted** — a company that subscribed. Say **"converted"**, not "subscribed".
+  Measure conversion with the **`subscription_changed`** event (~16/quarter);
+  `subscription_purchased` fired ~once ever — do NOT use it. Conversion sits
+  **downstream of retention** (retained → then converts).
+- **payment / credit purchase** — the **`credit_topup`** event (~224/quarter,
+  carries `amount`; fires pre-checkout so it's intent-to-pay, credits only).
+  There is **no `credit_purchased` event** in Mixpanel — `credit_topup` IS the
+  credit-purchase event. Reconciled revenue/MRR still needs Stripe (deferred).
+- **activation / build** — `node_used` within 14d, **cohort-by-signup-device,
+  counted on any device** (see the funnel rule in step 3).
+
 ## Steps
 
 1. **Get today's assignment** (no secrets needed):
