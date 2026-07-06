@@ -84,12 +84,16 @@ them to the ledger, commit, and write the digest.
       If the Gmail connector is unavailable in this run (headless auth can drop),
       skip it gracefully — the committed file + printed digest below are the
       fallback, so nothing is lost.
-   c. **Commit the ledger** so it survives to the next run:
+   c. **Commit the ledger to `main`** so it survives to the next run. The next
+      run clones `main`, so the ledger MUST land there or novelty tracking breaks:
       ```
       git add insights/INSIGHTS_LOG.md insights/insights.jsonl insights/questions.md
       git commit -m "insights: <date> — <short headline>"
-      git push
+      git push origin HEAD:main        # push directly to main, not the working branch
       ```
+      If pushing to `main` is rejected (protected branch), fall back to
+      `git push origin HEAD` (a dated branch) and note in your final message that
+      the branch needs merging to main so tomorrow's run sees today's findings.
    d. **Print the digest** in your final message so it's visible in the session.
 
 ## Quality bar
