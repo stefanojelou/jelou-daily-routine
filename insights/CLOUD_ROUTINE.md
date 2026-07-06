@@ -71,16 +71,26 @@ them to the ledger, commit, and write the digest.
 5. **Grow the backlog** — append fresh questions to `insights/questions.md`
    (strike answered ones with `- ~~...~~`).
 
-6. **Deliver + persist.** Write the digest file and commit everything back so the
-   ledger survives to the next run:
-   ```
-   python -m insights.digest    # writes data/digests/<date>-insights.md (file mode)
-   git add insights/INSIGHTS_LOG.md insights/insights.jsonl insights/questions.md
-   git commit -m "insights: <date> — <short headline>"
-   git push
-   ```
-   Then **print the digest in your final message** so it's visible in the session
-   (email delivery is deferred until SMTP creds are available cloud-side).
+6. **Deliver + persist.**
+   a. **Build the digest.** `python -m insights.digest` writes
+      `data/digests/<date>-insights.md` (file mode); read that file for the body,
+      or reconstruct it from the insights you logged this run.
+   b. **Create a Gmail draft** via the **Gmail MCP connector** (draft, NOT send —
+      the recipient reviews and sends):
+      - tool: `create_draft`
+      - `to`: `stefano.uccelli@jelou.ai`
+      - `subject`: `Daily insights — <date> — <short headline>`
+      - `body`: the digest markdown
+      If the Gmail connector is unavailable in this run (headless auth can drop),
+      skip it gracefully — the committed file + printed digest below are the
+      fallback, so nothing is lost.
+   c. **Commit the ledger** so it survives to the next run:
+      ```
+      git add insights/INSIGHTS_LOG.md insights/insights.jsonl insights/questions.md
+      git commit -m "insights: <date> — <short headline>"
+      git push
+      ```
+   d. **Print the digest** in your final message so it's visible in the session.
 
 ## Quality bar
 One verified, surprising finding beats five obvious ones. Numbers with
