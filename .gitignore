@@ -14,6 +14,7 @@
 !/README_ROUTINE.md
 !/requirements-insights.txt
 !/insights/
+!/.github/
 
 # 3. Within insights/, drop caches and local-only artifacts.
 insights/__pycache__/

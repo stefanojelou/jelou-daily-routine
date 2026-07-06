@@ -25,7 +25,8 @@ from pathlib import Path
 from insights.connections import load_env
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-DIGEST_DIR = SCRIPT_DIR.parent / "data" / "digests"
+# Tracked in git so the GitHub Action can email the newest digest on push.
+DIGEST_DIR = SCRIPT_DIR / "digests"
 
 
 def _format_markdown(date: str, assignment: dict, insights: list[dict]) -> str:

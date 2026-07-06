@@ -98,30 +98,25 @@ them to the ledger, commit, and write the digest.
 5. **Grow the backlog** — append fresh questions to `insights/questions.md`
    (strike answered ones with `- ~~...~~`).
 
-6. **Deliver + persist.**
-   a. **Build the digest.** `python -m insights.digest` writes
-      `data/digests/<date>-insights.md` (file mode); read that file for the body,
-      or reconstruct it from the insights you logged this run.
-   b. **Create a Gmail draft** via the **Gmail MCP connector** (draft, NOT send —
-      the recipient reviews and sends):
-      - tool: `create_draft`
-      - `to`: `stefano.uccelli@jelou.ai`
-      - `subject`: `Daily insights — <date> — <short headline>`
-      - `body`: the digest markdown
-      If the Gmail connector is unavailable in this run (headless auth can drop),
-      skip it gracefully — the committed file + printed digest below are the
-      fallback, so nothing is lost.
-   c. **Commit the ledger to `main`** so it survives to the next run. The next
-      run clones `main`, so the ledger MUST land there or novelty tracking breaks:
+6. **Deliver + persist.** Email is handled automatically by a GitHub Action
+   (`.github/workflows/email-digest.yml`) that fires on push whenever a digest
+   file changes and sends it via Resend. You do NOT send email yourself — you just
+   write the digest file and push it.
+   a. **Write the digest file** to the tracked path `insights/digests/<date>-insights.md`.
+      In Python: `from insights.digest import send_digest; send_digest("<date>",
+      assignment, survivors, dry_run=True)` — dry_run writes the file without any
+      external send (the Action does the sending).
+   b. **Commit to `main`** so the ledger persists AND the digest push triggers the
+      email Action. The next run clones `main`, so this MUST land on main:
       ```
-      git add insights/INSIGHTS_LOG.md insights/insights.jsonl insights/questions.md
+      git add insights/INSIGHTS_LOG.md insights/insights.jsonl insights/questions.md insights/digests/
       git commit -m "insights: <date> — <short headline>"
-      git push origin HEAD:main        # push directly to main, not the working branch
+      git push origin HEAD:main        # push to main; also triggers the email Action
       ```
       If pushing to `main` is rejected (protected branch), fall back to
-      `git push origin HEAD` (a dated branch) and note in your final message that
-      the branch needs merging to main so tomorrow's run sees today's findings.
-   d. **Print the digest** in your final message so it's visible in the session.
+      `git push origin HEAD` (a dated branch) and note that it needs merging to main
+      (and the email Action won't fire until it's on main).
+   c. **Print the digest** in your final message so it's visible in the session.
 
 ## Quality bar
 One verified, surprising finding beats five obvious ones. Numbers with

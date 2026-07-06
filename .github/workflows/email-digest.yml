@@ -1,0 +1,49 @@
+name: Email daily digest
+
+# Fires when the daily routine pushes a new digest to main, and can be run
+# manually for testing. Emails the newest digest via Resend (RESEND_API_KEY secret).
+on:
+  push:
+    branches: [main]
+    paths:
+      - "insights/digests/**"
+  workflow_dispatch: {}
+
+jobs:
+  email:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Send newest digest via Resend
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          MAIL_TO: stefano.uccelli@jelou.ai
+          # Resend's shared sender works without domain verification, but only
+          # delivers to your own Resend account email. Once you verify a domain,
+          # change this to e.g. insights@yourdomain.com.
+          MAIL_FROM: Jelou Insights <onboarding@resend.dev>
+        run: |
+          set -euo pipefail
+          if [ -z "${RESEND_API_KEY:-}" ]; then
+            echo "::error::RESEND_API_KEY secret is not set"; exit 1
+          fi
+          FILE=$(ls insights/digests/*-insights.md 2>/dev/null | sort | tail -1 || true)
+          if [ -z "$FILE" ]; then echo "No digest file found; nothing to send."; exit 0; fi
+          echo "Emailing: $FILE"
+          SUBJECT=$(head -1 "$FILE" | sed 's/^#\s*//')
+          [ -z "$SUBJECT" ] && SUBJECT="Daily insights"
+          # Build the JSON payload safely (jq handles all escaping of the markdown body).
+          jq -n \
+            --arg from "$MAIL_FROM" \
+            --arg to   "$MAIL_TO" \
+            --arg subject "$SUBJECT" \
+            --rawfile text "$FILE" \
+            '{from:$from, to:[$to], subject:$subject, text:$text}' > payload.json
+          HTTP=$(curl -sS -o resp.json -w "%{http_code}" -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer ${RESEND_API_KEY}" \
+            -H "Content-Type: application/json" \
+            --data @payload.json)
+          echo "Resend HTTP $HTTP"; cat resp.json; echo
+          if [ "$HTTP" -ge 300 ]; then echo "::error::Resend send failed"; exit 1; fi
+          echo "Sent."
