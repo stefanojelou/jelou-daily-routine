@@ -17,6 +17,7 @@ Usage (from the routine):
 """
 from __future__ import annotations
 
+import html as _html
 import json
 import os
 from datetime import datetime
@@ -86,6 +87,75 @@ def _format_markdown(date: str, assignment: dict, insights: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def _format_html(date: str, assignment: dict, insights: list[dict]) -> str:
+    """Email-safe HTML (inline styles only — email clients strip <style>/CSS files).
+    Jelou palette from docs/dashboard-app/design.md."""
+    e = _html.escape
+    new = [i for i in insights if i.get("status") == "new"]
+    upd = [i for i in insights if i.get("status") == "update"]
+
+    def row(label: str, value_html: str) -> str:
+        return (f'<div style="font-size:13px;line-height:1.45;color:#727c94;margin:3px 0">'
+                f'<b style="color:#161c2b">{label}:</b> {value_html}</div>')
+
+    def card(i: dict, updated: bool) -> str:
+        badge = ("🔁" if updated else "🆕")
+        metric = f'{e(str(i.get("metric","?")))} = {e(str(i.get("value","?")))}'
+        if updated and i.get("prior_value") is not None:
+            metric += f' <span style="color:#959daf">(was {e(str(i["prior_value"]))})</span>'
+        src = i.get("sources")
+        src = ", ".join(src) if isinstance(src, list) else (src or "")
+        rows = [row("Metric", f'<span style="color:#00a2cf;font-weight:700">{metric}</span>')]
+        if src:
+            rows.append(row("Sources", e(str(src))))
+        if i.get("confidence"):
+            rows.append(row("Confidence", e(str(i["confidence"]))))
+        if i.get("caveat"):
+            rows.append(row("Caveat", e(str(i["caveat"]))))
+        return (
+            '<div style="border:1px solid #e3e5ec;border-radius:12px;padding:16px 18px;'
+            'margin:0 0 14px;background:#ffffff">'
+            f'<div style="font-weight:700;font-size:16px;color:#0f1f33;margin-bottom:6px">'
+            f'{badge} {e(str(i.get("title","(untitled)")))}</div>'
+            f'<div style="font-size:14px;line-height:1.55;color:#303b56;margin-bottom:10px">'
+            f'{e(str(i.get("one_liner","")))}</div>'
+            + "".join(rows) + "</div>"
+        )
+
+    parts = [
+        '<div style="max-width:640px;margin:0 auto;padding:20px;background:#eef1f4;'
+        'font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif">',
+        f'<div style="font-size:22px;font-weight:800;color:#0f1f33">Daily insights '
+        f'<span style="color:#727c94;font-weight:600">— {e(date)}</span></div>',
+        f'<div style="font-size:13px;color:#727c94;margin:4px 0 18px">Explored: '
+        f'<b style="color:#303b56">{e(str(assignment.get("theme","?")))}</b> → '
+        f'{e(str(assignment.get("angle","")))} · lens: {e(str(assignment.get("segment","overall")))}</div>',
+    ]
+    if not insights:
+        parts.append('<div style="font-size:14px;color:#303b56;background:#fff;border:1px solid #e3e5ec;'
+                     'border-radius:12px;padding:16px">No new or materially-changed insight today — '
+                     'the angle was explored and came up dry (logged for coverage).</div>')
+    if new:
+        parts.append(f'<div style="font-size:13px;font-weight:700;color:#00b3c7;margin:6px 0 8px">🆕 NEW ({len(new)})</div>')
+        parts += [card(i, False) for i in new]
+    if upd:
+        parts.append(f'<div style="font-size:13px;font-weight:700;color:#d39c00;margin:14px 0 8px">🔁 UPDATED ({len(upd)})</div>')
+        parts += [card(i, True) for i in upd]
+
+    foot = ['<div style="font-size:12px;color:#8a93a6;border-top:1px solid #e3e5ec;margin-top:8px;padding-top:12px">']
+    if assignment.get("twist"):
+        foot.append(f'<div><b style="color:#727c94">Twist applied:</b> {e(str(assignment["twist"]))}</div>')
+    qs = assignment.get("questions") or []
+    if qs:
+        foot.append('<div style="margin-top:4px"><b style="color:#727c94">Backlog in scope:</b> '
+                    + e("; ".join(qs)) + '</div>')
+    foot.append('<div style="margin-top:8px">Full log: <code>insights/INSIGHTS_LOG.md</code> · '
+                'backlog: <code>insights/questions.md</code></div></div>')
+    parts += foot
+    parts.append("</div>")
+    return "\n".join(parts)
+
+
 def _format_slack(date: str, assignment: dict, insights: list[dict]) -> dict:
     new = [i for i in insights if i.get("status") == "new"]
     upd = [i for i in insights if i.get("status") == "update"]
@@ -134,6 +204,9 @@ def send_digest(date: str, assignment: dict, insights: list[dict], dry_run: bool
     load_env()
     md = _format_markdown(date, assignment, insights)
     path = _write_file(date, md)
+    # HTML sibling for the email Action (rendered body; .md stays the plain-text fallback)
+    (DIGEST_DIR / f"{date}-insights.html").write_text(
+        _format_html(date, assignment, insights), encoding="utf-8")
     result = {"file": str(path), "channel": "file", "ok": True, "detail": f"wrote {path.name}"}
 
     if dry_run:

@@ -30,16 +30,23 @@ jobs:
           fi
           FILE=$(ls insights/digests/*-insights.md 2>/dev/null | sort | tail -1 || true)
           if [ -z "$FILE" ]; then echo "No digest file found; nothing to send."; exit 0; fi
-          echo "Emailing: $FILE"
+          HTML_FILE="${FILE%.md}.html"
+          echo "Emailing: $FILE (html: $HTML_FILE)"
           SUBJECT=$(head -1 "$FILE" | sed 's/^#\s*//')
           [ -z "$SUBJECT" ] && SUBJECT="Daily insights"
-          # Build the JSON payload safely (jq handles all escaping of the markdown body).
-          jq -n \
-            --arg from "$MAIL_FROM" \
-            --arg to   "$MAIL_TO" \
-            --arg subject "$SUBJECT" \
-            --rawfile text "$FILE" \
-            '{from:$from, to:[$to], subject:$subject, text:$text}' > payload.json
+          # Build the JSON payload safely (jq escapes both bodies). Send HTML when a
+          # rendered sibling exists; always include the markdown as plain-text fallback.
+          if [ -f "$HTML_FILE" ]; then
+            jq -n \
+              --arg from "$MAIL_FROM" --arg to "$MAIL_TO" --arg subject "$SUBJECT" \
+              --rawfile html "$HTML_FILE" --rawfile text "$FILE" \
+              '{from:$from, to:[$to], subject:$subject, html:$html, text:$text}' > payload.json
+          else
+            jq -n \
+              --arg from "$MAIL_FROM" --arg to "$MAIL_TO" --arg subject "$SUBJECT" \
+              --rawfile text "$FILE" \
+              '{from:$from, to:[$to], subject:$subject, text:$text}' > payload.json
+          fi
           HTTP=$(curl -sS -o resp.json -w "%{http_code}" -X POST https://api.resend.com/emails \
             -H "Authorization: Bearer ${RESEND_API_KEY}" \
             -H "Content-Type: application/json" \
