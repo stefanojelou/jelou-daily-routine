@@ -8,14 +8,17 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 
 ## Acquisition
 - Which acquisition channel (initial_utm_source) has the best signup→activation→pay full-funnel yield, not just signup volume?
-- Is the mobile-vs-desktop activation gap widening or narrowing across recent signup cohorts?
+- ~~Is the mobile-vs-desktop activation gap widening or narrowing across recent signup cohorts?~~ (2026-07-06: gap is near-total — mobile ~0.3% build vs desktop ~29-31%.)
 - Do signups that arrive with `has_template=true` at onboarding_started convert better than blank-start signups?
 - What share of `onboarding_started` never reach `signup_completed`, and where do they die?
 
 ## Activation
 - What is the median time from signup_completed to first agent_message_sent, and how does it differ for eventual payers?
 - Which single activation milestone most strongly predicts week-2 return?
-- How large is the dead-on-arrival cohort (signed up, zero activation events), and which channel produces it most?
+- ~~How large is the dead-on-arrival cohort (signed up, zero activation events), and which channel produces it most?~~ (2026-07-06: ~55% of signups are mobile and only ~0.3% ever build; paid channels are 77% mobile → 5-7% build-activation vs 15% organic.)
+- Do the mobile signups ever come back on desktop later (cross-device activation), or are they permanently lost? (split by distinct_id)
+- Is there a mobile-appropriate first action (chat/tester) we could make the mobile activation goal instead of the desktop-only canvas?
+- What is the CAC-adjusted view: does paid spend on mobile-heavy channels (Meta, Google) ever recover given ~5% build-activation?
 
 ## Templates
 - Does installing a template shorten time-to-activation, or just correlate with users who'd activate anyway?

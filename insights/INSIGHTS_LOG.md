@@ -6,6 +6,30 @@ re-reported.
 
 ---
 
+### 2026-07-06 — 🆕 NEW — Paid acquisition is 77% mobile → activates at ~5-7% vs 15% organic
+
+Signups with a utm_source (paid, 1,695/8,084 = 21%) are 77% mobile (1,302), vs ~50% mobile for organic. Because mobile can't build, paid channels convert to real building (node_used, 14d) at roughly half the organic rate: Google Ads 7% (52/725), Google 'adwords' 6% (22/370), Meta fb 4% (12/283) / ig 6% (10/172) — vs 15% organic (974/6,389). Paid spend is largely buying dead-on-arrival mobile signups.
+
+- **Metric:** paid-channel 14d build-activation = **~6%**
+- **Theme/angle:** Retention & churn cohorts — Activation by acquisition channel (paid vs organic)
+- **Segment:** by acquisition channel (utm_source)  ·  **Sources:** mixpanel
+- **Confidence:** medium-high (Google N=1,106, Meta N=455; organic baseline N=6,389)
+- **Caveat:** utm_source only on ~21% of signups; 'undefined' treated as organic/direct. X/x-ads excluded from headline (N<120, noisy at 15-24%). Activation proxied by node_used; mechanism (paid→mobile→can't build) confirmed by device split.
+
+---
+
+### 2026-07-06 — 🆕 NEW — Mobile signups are dead-on-arrival — 0.3% ever build vs 29% on desktop
+
+55% of production signups (4,417/8,084 over 5 mo) arrive on mobile (Android+iOS), but virtually none activate the builder: only 13 mobile users ever added a node to the canvas within 14d (0.3%), vs ~29% on desktop (Windows 29%, Mac 31%). Mobile doesn't activate via testing either (~1.5%). This quantifies the previously-qualitative mobile/desktop mismatch: the builder canvas is desktop-only, so a majority of signups structurally cannot activate on the device they signed up on.
+
+- **Metric:** mobile 14d build-activation (node_used) = **0.3%**
+- **Theme/angle:** Retention & churn cohorts — Dead-on-arrival cohort by device — who never activates
+- **Segment:** by device ($os)  ·  **Sources:** mixpanel
+- **Confidence:** high (N=4,417 mobile signups; production only; 14d window)
+- **Caveat:** node_used = 'Node Added to Canvas' is a desktop drag-drop UI, so this measures builder activation specifically; mobile app-session rate is ~96% (they open, they just can't build). Cross-device users (sign up mobile, build later on desktop) would be split by distinct_id and could modestly understate mobile.
+
+---
+
 ### 2026-07-01 — 🆕 NEW — Template installs aren't shelfware — but 21% of installers vanish
 
 Templates are installed mid-session (median ~1.4h to next builder session; 84% of installs are followed by more building within 7d) — they are NOT abandoned on a shelf. The real leak is a tail: 21% of template-installing companies (12/57, >=7d window) never open the builder again after their first install — a concrete re-engagement target.
