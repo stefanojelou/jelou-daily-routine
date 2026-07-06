@@ -42,19 +42,47 @@ def _format_markdown(date: str, assignment: dict, insights: list[dict]) -> str:
     if not insights:
         lines += ["_No new or materially-changed insight surfaced today. The angle was explored "
                   "and came up dry — logged for coverage._", ""]
+
+    def block(i: dict, updated: bool = False) -> list[str]:
+        b = [f"### {'🔁 ' if updated else '🆕 '}{i.get('title','(untitled)')}", ""]
+        b.append(i.get("one_liner", ""))
+        b.append("")
+        metric = f"**{i.get('metric','?')} = {i.get('value','?')}**"
+        if updated and i.get("prior_value") is not None:
+            metric += f"  _(was {i['prior_value']})_"
+        b.append(f"- **Metric:** {metric}")
+        src = i.get("sources")
+        if isinstance(src, list):
+            src = ", ".join(src)
+        if src:
+            b.append(f"- **Sources:** {src}")
+        if i.get("confidence"):
+            b.append(f"- **Confidence:** {i['confidence']}")
+        if i.get("caveat"):
+            b.append(f"- **Caveat:** {i['caveat']}")
+        b.append("")
+        return b
+
     if new:
         lines.append(f"## 🆕 New ({len(new)})")
-        for i in new:
-            lines.append(f"- **{i.get('title')}** — {i.get('one_liner')}  "
-                         f"_({i.get('metric')} = {i.get('value')})_")
         lines.append("")
+        for i in new:
+            lines += block(i)
     if upd:
         lines.append(f"## 🔁 Updated ({len(upd)})")
-        for i in upd:
-            lines.append(f"- **{i.get('title')}** — {i.get('metric')} moved to "
-                         f"**{i.get('value')}** (was {i.get('prior_value')}). {i.get('one_liner')}")
         lines.append("")
-    lines += ["---", "Full log: `insights/INSIGHTS_LOG.md` · backlog: `insights/questions.md`"]
+        for i in upd:
+            lines += block(i, updated=True)
+
+    # context footer: what else was in scope today + where to dig
+    twist = assignment.get("twist")
+    qs = assignment.get("questions") or []
+    lines.append("---")
+    if twist:
+        lines.append(f"**Creativity twist applied:** {twist}")
+    if qs:
+        lines.append("**Backlog questions in scope:** " + "; ".join(qs))
+    lines.append("Full log: `insights/INSIGHTS_LOG.md` · backlog: `insights/questions.md`")
     return "\n".join(lines)
 
 
