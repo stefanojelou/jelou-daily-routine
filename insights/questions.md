@@ -36,9 +36,13 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 - Among resurrected (dormant→active) companies, what event marks the comeback?
 
 ## Usage depth
-- What share of all workflow executions come from the top 1% / 10% of companies?
+- ~~What share of all workflow executions come from the top 1% / 10% of companies?~~ (2026-07-07: agent_message_sent proxy — top 1% of companies = 28.7%, top 10% = 61.7%, Gini 0.70; 48% of companies sent ≤2 msgs in 90d. Confirm on true ClickHouse executions when wired.)
 - Do companies with high workflow error_rate_pct churn faster than clean-running ones?
 - Does building SKILL-type nodes (vs only tools) mark a stickier user?
+- Are the top-1% "power" companies (30 accounts, ~29% of agent volume) the same ones that pay, and what's the revenue risk if any churns? (needs Stripe)
+- Does the Ecuador concentration (50.5% of agent usage) match revenue concentration, or do other markets monetize better per active company? (needs Stripe)
+- Within the top-decile companies, how many distinct active users per company — is depth driven by a few power-users or broad team adoption?
+- What separates the 65% of builders who add <5 nodes then stop from the 6% who add ≥40 — is there an early node-count threshold that predicts becoming a power account?
 
 ## Cross-source / wildcard
 - Which company has the highest assistant build cost (Neon) relative to realized executions (ClickHouse)?

@@ -6,6 +6,30 @@ re-reported.
 
 ---
 
+### 2026-07-07 — 🆕 NEW — Agent usage is a home-market story — Ecuador is half of all activity
+
+By geography, agent_message_sent (prod, 90d) is dominated by Jelou's home market: Ecuador alone = 12,548 events (50.5%), then Colombia 2,879 (11.6%), Mexico 2,451 (9.9%), Peru 1,873 (7.5%), Brazil 1,411 (5.7%). The top 3 countries are ~72% and the top 5 ~85%. The US is only 469 (1.9%). Usage concentration is geographic as well as per-company — expansion beyond the Andean core is still thin.
+
+- **Metric:** Ecuador share of agent messages = **50.5% (top3 ~72%)**
+- **Theme/angle:** Agent & workflow usage depth — Power-law of usage — geographic concentration
+- **Segment:** by geography (mp_country_code)  ·  **Sources:** mixpanel
+- **Confidence:** high (N=24,853 events, production, 90d, event mp_country_code)
+- **Caveat:** mp_country_code is Mixpanel geo-IP at event time, not billing country; VPNs/travel add minor noise. Reflects where activity happens, not necessarily company HQ.
+
+---
+
+### 2026-07-07 — 🆕 NEW — Agent usage follows a steep power-law — top 10% of companies drive 62%
+
+Over the last 90d, 24,853 agent_message_sent events (prod) span 2,987 companies but are heavily concentrated: the top 1% of companies (30) generate 28.7%, the top 5% (150) 50.6%, and the top 10% (299) 61.7% of all messages (Gini 0.70). The tail is shallow — 48% of companies sent <=2 messages in 90 days and 31% sent exactly one. Builds echo it: of 1,789 companies that added a node, 65% added <5 nodes total and only 6% added >=40. Depth lives in a thin slice of accounts.
+
+- **Metric:** top-10pct company share of agent messages = **61.7% (top1%=28.7%, top5%=50.6%, Gini 0.70)**
+- **Theme/angle:** Agent & workflow usage depth — Power-law of usage: what share of executions come from the top 1%/10% of companies
+- **Segment:** by company  ·  **Sources:** mixpanel
+- **Confidence:** high (N=24,853 events / 2,987 companies, production, 90d; company_id user-property breakdown, checksum within 0.3%)
+- **Caveat:** company_id from the $user profile; 449 events (1.8%) had no company_id (undefined) and are excluded from concentration. Internal/test accounts not separately excludable by id — a few low-id companies may be internal, which would slightly inflate the top slice. agent_message_sent is the agent-usage proxy; true workflow-execution internals (durations, error_rate) need ClickHouse (deferred).
+
+---
+
 ### 2026-07-06 — 🔁 UPDATE — Correction: mobile-signup build-activation is 2.9% (not 0.3%) vs desktop 27%
 
 Run #1 measured node_used with $os=mobile, but node_used is a desktop-only drag action (31,722 desktop vs 128 mobile events), so that ~0.3% was near-tautological. Cohorting on SIGNUP device and counting node_used within 14d on ANY device: mobile signups activate at 2.9% (132/4,536) vs desktop 26.9% (953/3,548). The ~9x structural gap and the paid-is-77%-mobile story hold; the magnitude was overstated ~10x.
