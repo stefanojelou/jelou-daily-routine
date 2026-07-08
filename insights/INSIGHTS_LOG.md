@@ -6,6 +6,18 @@ re-reported.
 
 ---
 
+### 2026-07-08 — 🆕 NEW — Signups flatlined ~90% since Jul 3 — anomaly isolated to signup_completed
+
+Production signup_completed collapsed from a stable ~61/day June baseline to 3,4,3,10/day on Jul 4-7 (~92% below trend; last 7d 188 vs prior 7d 571 = -67% WoW). Isolated to signups: node_used, agent_message_sent, campaign_sent and tester_session_started only dipped for the Jul 4-5 weekend and fully recovered Jul 6-7. Not env-tag drift (all-env $overall collapsed identically) and not a shift to the marketing project (3842156 has zero signup_completed). Most likely a broken signup_completed instrumentation/event or a genuine new-signup outage.
+
+- **Metric:** signup_completed daily volume, Jul 4-7 avg = 5/day (vs June ~61/day; -67% last-7d WoW) = **5.0**
+- **Theme/angle:** Cross-source anomaly & wildcard — Biggest week-over-week mover across all sources
+- **Segment:** overall (activity-tier lens N/A — new signups have no tier yet)  ·  **Sources:** mixpanel
+- **Confidence:** high (production, daily; cross-checked vs other events, environments, and second project)
+- **Caveat:** Cannot yet distinguish a broken signup_completed event (tracking regression) from a real signup-funnel outage from Mixpanel alone; server logs / funnel checks needed. Current partial-window days under-report slightly but cannot explain a 5-day flatline given other events recovered. While unresolved, all signup-based cohort metrics in this project are unreliable.
+
+---
+
 ### 2026-07-07 — 🆕 NEW — Agent usage is a home-market story — Ecuador is half of all activity
 
 By geography, agent_message_sent (prod, 90d) is dominated by Jelou's home market: Ecuador alone = 12,548 events (50.5%), then Colombia 2,879 (11.6%), Mexico 2,451 (9.9%), Peru 1,873 (7.5%), Brazil 1,411 (5.7%). The top 3 countries are ~72% and the top 5 ~85%. The US is only 469 (1.9%). Usage concentration is geographic as well as per-company — expansion beyond the Andean core is still thin.

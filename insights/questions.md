@@ -47,3 +47,6 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 ## Cross-source / wildcard
 - Which company has the highest assistant build cost (Neon) relative to realized executions (ClickHouse)?
 - Is there an acquisition channel that is cheap to sign up but never pays (a low-quality source)?
+- Is the ~90% signup_completed drop since Jul 3 a broken tracking event or a real signup-funnel outage? Cross-check against server-side signups / DB user-created rows once wired.
+- If signup_completed is broken, since exactly when, and are onboarding_started / first-session events still firing for brand-new distinct_ids (which would confirm tracking-only, not a real outage)?
+- Do new distinct_ids still appear in node_used / agent_message_sent after Jul 3 (i.e. are new users still arriving despite the flat signup event)?
