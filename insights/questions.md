@@ -46,7 +46,10 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 
 ## Cross-source / wildcard
 - Which company has the highest assistant build cost (Neon) relative to realized executions (ClickHouse)?
-- Is there an acquisition channel that is cheap to sign up but never pays (a low-quality source)?
+- ~~Is there an acquisition channel that is cheap to sign up but never pays (a low-quality source)?~~ (2026-07-09: at the pre-pay/build-activation proxy, Facebook_Mobile_Reels is the clearest low-quality source — 151 signups, 0.7% ever build. Confirm on realized pay once Stripe is wired.)
+- Does the Facebook_Desktop_Feed placement (30% build vs organic 16%) scale — is there enough desktop-placement inventory on Meta to shift spend into, or is it a small accidental slice?
+- What is the realized pay-through (credit_topup / Stripe) by placement — do cpc/ppc (Google, ~6-7% build) ever recover CAC despite low build rates, or are they as dead as Meta mobile?
 - Is the ~90% signup_completed drop since Jul 3 a broken tracking event or a real signup-funnel outage? Cross-check against server-side signups / DB user-created rows once wired.
 - If signup_completed is broken, since exactly when, and are onboarding_started / first-session events still firing for brand-new distinct_ids (which would confirm tracking-only, not a real outage)?
-- Do new distinct_ids still appear in node_used / agent_message_sent after Jul 3 (i.e. are new users still arriving despite the flat signup event)?
+- Do new distinct_ids still appear in node_used / agent_message_sent after Jul 3 (i.e. are new users still arriving despite the flat signup event)? (2026-07-09: node_used/agent_message_sent/tester_session_started all recovered to normal volume Jul 6-8 while signups stayed floored — points to a broken signup_completed event, not a real new-user outage. Still needs new-vs-returning distinct_id split to confirm.)
+- Since exactly which deploy/commit did signup_completed break (Jul 2→3 boundary)? Bisect against release history once repo/CI access is available.

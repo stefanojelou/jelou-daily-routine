@@ -6,6 +6,30 @@ re-reported.
 
 ---
 
+### 2026-07-09 — 🆕 NEW — Acquisition placement decides quality: FB Mobile Reels builds at 0.7%, FB Desktop Feed at 30%
+
+Channel quality by placement (initial_utm_medium), signup->build (node_used, 14d, cohort on signup, outcome any-device), prod 120d. Organic/direct = 16% (978/6,184), the healthy baseline. Google paid is ~half: cpc 7% (54/732), ppc 6% (23/367). Meta is NOT uniformly bad — it splits by the device the placement targets: Facebook_Mobile_Reels 0.7% (1/151) and Facebook_Mobile_Feed 3% (2/79) are dead-on-arrival, while Facebook_Desktop_Feed 30% (9/30) beats organic. Same advertiser, opposite outcomes — the placement is a device proxy, and mobile placements feed a desktop-only builder.
+
+- **Metric:** Facebook_Mobile_Reels 14d build-activation = **0.7%**
+- **Theme/angle:** Acquisition & signup funnel — Channel quality by placement (utm_medium) — which acquisition placement's signups actually build
+- **Segment:** by acquisition medium/placement (initial_utm_medium)  ·  **Sources:** mixpanel
+- **Confidence:** medium-high (organic N=6,184, cpc N=732, ppc N=367 solid; Meta placements small-N: Reels 151, Mobile Feed 79, Desktop Feed 30 — directional)
+- **Caveat:** utm_medium present on only ~21% of signups (undefined=organic/direct). Activation proxied by node_used (desktop drag-drop). Meta-placement rates are small-N; the mobile-vs-desktop contrast within Meta is the robust signal, not any single placement's exact %. Pay-through needs Stripe (deferred).
+
+---
+
+### 2026-07-09 — 🔁 UPDATE — Signup collapse persists 6 days — now confirmed signup-specific (others recovered)
+
+The ~90% signup_completed collapse flagged Jul 8 has NOT recovered: Jul 3-9 daily signups ran 17,3,4,3,10,13,0 vs a June baseline of ~68-103/day. Last-7d (Jul 3-9) = 50 signups vs prior-7d 542 = -91% WoW (worse than the -67% reported yesterday). Crucially, node_used, agent_message_sent and tester_session_started all dipped only for the Jul 4-5 weekend and fully recovered to normal volume Jul 6-8 (node 264/306/292, agent 315/376/219, tester 239/312/272) — signups alone stayed floored. That isolates the break to signup_completed specifically and leans toward a broken signup event / tracking regression over a genuine new-user outage (downstream activity continues). 6-day sustained; all signup-based cohort metrics remain unreliable until resolved.
+
+- **Metric:** signup_completed last-7d WoW = **-91%**  (was -67% (Jul 4-7 avg 5/day))
+- **Theme/angle:** Cross-source anomaly & wildcard — Biggest week-over-week mover — signup event health
+- **Segment:** overall  ·  **Sources:** mixpanel
+- **Confidence:** high (production daily; cross-checked vs 3 other core events, all recovered)
+- **Caveat:** Jul 9 is a partial day (0 so far). Mixpanel alone still can't fully separate a broken signup_completed event from a real signup outage, but the clean recovery of node_used/agent/tester while signups stayed dead strongly favors a tracking regression. Needs server-side signup counts / DB user-created rows to close out.
+
+---
+
 ### 2026-07-08 — 🆕 NEW — Signups flatlined ~90% since Jul 3 — anomaly isolated to signup_completed
 
 Production signup_completed collapsed from a stable ~61/day June baseline to 3,4,3,10/day on Jul 4-7 (~92% below trend; last 7d 188 vs prior 7d 571 = -67% WoW). Isolated to signups: node_used, agent_message_sent, campaign_sent and tester_session_started only dipped for the Jul 4-5 weekend and fully recovered Jul 6-7. Not env-tag drift (all-env $overall collapsed identically) and not a shift to the marketing project (3842156 has zero signup_completed). Most likely a broken signup_completed instrumentation/event or a genuine new-signup outage.
