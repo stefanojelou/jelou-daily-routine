@@ -19,6 +19,8 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 - Do the mobile signups ever come back on desktop later (cross-device activation), or are they permanently lost? (split by distinct_id)
 - Is there a mobile-appropriate first action (chat/tester) we could make the mobile activation goal instead of the desktop-only canvas?
 - What is the CAC-adjusted view: does paid spend on mobile-heavy channels (Meta, Google) ever recover given ~5% build-activation?
+- Given 86% of build-activators fire within 24h of signup, does the ~14% "slow" cohort (day 1-14) retain/pay any differently than the same-session builders — i.e. is a delayed first build a worse or equal signal?
+- Does the same first-hour front-loading hold for the OTHER milestones (skill_created, tester_session_started, agent_message_sent), or is node_used uniquely same-session — and which milestone has the longest tail worth a re-engagement nudge?
 
 ## Templates
 - Does installing a template shorten time-to-activation, or just correlate with users who'd activate anyway?

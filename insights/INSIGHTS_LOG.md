@@ -6,6 +6,18 @@ re-reported.
 
 ---
 
+### 2026-07-10 — 🆕 NEW — Time-to-first-value is a first-hour event — 66% of activators build within 1h of signup
+
+Build-activation is a first-HOUR event, not a first-week one. Of the 1,103 signups (of 8,126, prod, Feb 1-Jul 10) who ever add a node within 14d, 38% do it within 10 min of signup, 66% within 1 hour, and 86% within 24 hours; only ~8% arrive after day 3. Median time-to-first-value is under ~30 min while the mean (17.9h) is dragged up by a thin tail — the mean is misleading. The window to convert a signup into a builder is essentially the same session: if they don't build on day 1 (86% cutoff), they almost never do. This is a desktop story — mobile signups activate at ~0 by construction (node_used is a desktop drag-drop), so the timing curve describes the desktop cohort. Actionable: onboarding nudges must fire in-session/first-hour; day-2+ email drips miss the window.
+
+- **Metric:** first-hour share of build-activators (signup->node_used) = **66**
+- **Theme/angle:** Activation & time-to-milestone — Time-to-first-value: distribution of hours from signup to first node_used
+- **Segment:** by device (desktop-driven; mobile ~0 by construction)  ·  **Sources:** mixpanel
+- **Confidence:** high (N=8,126 signups; 1,103 activators within 14d; cumulative-window CDF at 10m/1h/1d/3d/7d/14d)
+- **Caveat:** Cohort on all prod signups Feb 1-Jul 10; node_used is the desktop builder proxy so mobile is ~0 by construction and the curve is desktop-driven. Recent signups (<14d) have partial windows (minor understatement of late arrivals). Median inferred by interpolation between the 10-min (38%) and 1-h (66%) buckets; Mixpanel ttc returns only the mean. Signup_completed collapse (Jul 3-9) affects only the newest ~1% of the window, not the distribution shape.
+
+---
+
 ### 2026-07-09 — 🆕 NEW — Acquisition placement decides quality: FB Mobile Reels builds at 0.7%, FB Desktop Feed at 30%
 
 Channel quality by placement (initial_utm_medium), signup->build (node_used, 14d, cohort on signup, outcome any-device), prod 120d. Organic/direct = 16% (978/6,184), the healthy baseline. Google paid is ~half: cpc 7% (54/732), ppc 6% (23/367). Meta is NOT uniformly bad — it splits by the device the placement targets: Facebook_Mobile_Reels 0.7% (1/151) and Facebook_Mobile_Feed 3% (2/79) are dead-on-arrival, while Facebook_Desktop_Feed 30% (9/30) beats organic. Same advertiser, opposite outcomes — the placement is a device proxy, and mobile placements feed a desktop-only builder.
