@@ -25,7 +25,10 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 ## Templates
 - Does installing a template shorten time-to-activation, or just correlate with users who'd activate anyway?
 - Which specific templates lead to real downstream usage vs sit unused (shelfware)?
-- What fraction of template *preview* opens convert to an actual install?
+- ~~What fraction of template *preview* opens convert to an actual install?~~ (2026-07-13: 18% overall — 27 of 147 unique previewers install any template within 30d; per-template 0–36%.)
+- Why do "Appointment scheduling" (0/13) and "Schedule with Microsoft Outlook Calendar" (0/6) convert 0% preview→install while "Schedule with Google Calendar" converts 12% — broken install path, missing integration, or genuinely unwanted?
+- Most installs come from ~40 custom/Spanish templates NOT in the previewable gallery (Agente Shopify 39, Tienda Jelou Shop 14) — how are those discovered/installed if not via the preview gallery, and should the top custom ones be promoted into the gallery?
+- Of the 27 gallery-preview installers, how many go on to build (node_used) vs the ~40 off-gallery installers — does gallery provenance predict activation?
 
 ## Monetization
 - What is the most common action sequence in the 48h before a company's first real (amount>0) charge?

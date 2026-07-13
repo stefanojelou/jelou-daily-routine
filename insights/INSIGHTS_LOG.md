@@ -6,6 +6,18 @@ re-reported.
 
 ---
 
+### 2026-07-13 — 🆕 NEW — Template gallery leaks 82% at preview->install; two scheduling templates convert 0%
+
+The template gallery has a real intent-vs-action leak: of 147 unique users who opened a template preview (prod, last 180d, 30d conversion window), only 27 went on to install any template = 18% overall. That is 120 companies who signalled template intent and installed nothing. At the per-template level, preview->install conversion ranges from 0% to 36%: Identity Verification 36% (5/14), Jelou Shop in-chat payment 26% (7/27), Shopify native checkout 24% (9/37) and Bitrix Lead Capture 20% (1/5) convert best, while WooCommerce 11% (2/18) and Schedule w/ Google Calendar 12% (4/32) lag. Two gallery templates are outright dead ends: "Appointment scheduling" (0/13) and "Schedule with Microsoft Outlook Calendar" (0/6) drew 19 previewers between them and converted ZERO. Crucially "Schedule with Google Calendar" DOES convert (12%), so scheduling is not dead as a category -- the Outlook and generic-appointment templates specifically are. The install side also reveals a gallery/catalog mismatch: previews fire on ~8 curated English-named templates, but installs sprawl across ~40 mostly custom/Spanish names (Agente Shopify 39, Tienda Jelou Shop 14), i.e. most installs come from outside the previewable gallery.
+
+- **Metric:** template preview->install conversion (unique users, 180d) = **18**
+- **Theme/angle:** Templates: intent vs. action — Template gallery preview->install conversion, per template
+- **Segment:** by template previewed  ·  **Sources:** mixpanel
+- **Confidence:** medium (per-user funnel, prod, 180d; overall N=147 previewers solid; per-template small-N directional)
+- **Caveat:** Counts are unique users (distinct_id), a close proxy for companies but not company_id-deduped; sizing in true companies would refine the 120. Small-N per template (previewers 5-37): the two dead-ends are 13 and 6 previewers -- individually marginal, but combined 0/19 vs an 18% base rate is unlikely by chance (~2%). Step 2 is template_installed (ANY template) within 30d, so a 0% cell means those previewers installed nothing at all, not that they installed a renamed equivalent. template_installed/template_preview_opened only carry ~180d of history (163 installs total). Downstream node_used activation per template is too thin to split. This is preview->install (intent->action), not preview->build; "marks" not "drives".
+
+---
+
 ### 2026-07-10 — 🆕 NEW — Time-to-first-value is a first-hour event — 66% of activators build within 1h of signup
 
 Build-activation is a first-HOUR event, not a first-week one. Of the 1,103 signups (of 8,126, prod, Feb 1-Jul 10) who ever add a node within 14d, 38% do it within 10 min of signup, 66% within 1 hour, and 86% within 24 hours; only ~8% arrive after day 3. Median time-to-first-value is under ~30 min while the mean (17.9h) is dragged up by a thin tail — the mean is misleading. The window to convert a signup into a builder is essentially the same session: if they don't build on day 1 (86% cutoff), they almost never do. This is a desktop story — mobile signups activate at ~0 by construction (node_used is a desktop drag-drop), so the timing curve describes the desktop cohort. Actionable: onboarding nudges must fire in-session/first-hour; day-2+ email drips miss the window.
