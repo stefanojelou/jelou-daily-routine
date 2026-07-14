@@ -6,6 +6,30 @@ re-reported.
 
 ---
 
+### 2026-07-14 — 🆕 NEW — Credit top-ups are small, organic-led, and don't stick — 79% organic, $10 median, agent-use decays 46%->14%->6%
+
+Characterizing the one monetization path with real history (credit_topup, 120 unique users May 13–Jul 14, prod). Amounts are small: median $10, mean $15.2, p90 $20, ~$3,360 total intent-to-pay over 2.5 months (pre-checkout, credits only — not reconciled revenue). By acquisition channel, credit-buying is NOT a media story: 79% of buyers (95/120) are organic/direct (no initial_utm_source), ~21% media (Google Ads 13, Meta fb/ig 5, other 7) — i.e. it mirrors the ~21% media share of the signup base, so paid channels buy proportionally, not disproportionately. And top-ups don't mark stickiness: on a weekly born->return curve (credit_topup -> agent_message_sent), 46% send an agent message the same week, but only 14% the next week and 6% two weeks out. Buying credits marks a moment of intent, it doesn't mark a retained user.
+
+- **Metric:** credit-topper wk1 agent-activity retention = **14%**
+- **Theme/angle:** Monetization & pay-drivers — Credit top-up size, channel mix, and post-topup engagement retention
+- **Segment:** by acquisition channel (initial_utm_source)  ·  **Sources:** mixpanel
+- **Confidence:** medium-high (N=120 buyers for amount/channel; retention $average across cohorts, mature May cohorts anchor the wk0-2 decay; small-N per channel)
+- **Caveat:** credit_topup fires pre-checkout so amount is intent-to-pay, not settled revenue, and credits only (subscriptions excluded). Retention proxied by agent_message_sent (canonical usage event) — if credits are spent on non-agent surfaces this understates stickiness. Channel split uses initial_utm_source on the $user profile (undefined=organic/direct). wk0/1/2 are cohort-weighted averages; recent (Jul) cohorts have immature windows. 'marks' not 'drives'.
+
+---
+
+### 2026-07-14 — 🆕 NEW — "Which path retains better" is unanswerable in Mixpanel yet — subscription_changed only went live ~Jun 24
+
+Today's angle (credit_topup vs subscription_changed: which retains better) can't be answered from Mixpanel yet, and the reason is a rigor trap. A naive lifetime pull looks like credit top-ups crush subscriptions ~9:1 (120 vs 14 unique users, prod), but subscription_changed fired ZERO before the week of Jun 22 and only started in earnest ~Jun 24 2026 (weekly: 0…0,8,6,1,1) — it's a brand-new event. Credit_topup has ~9 weeks of history (since ~May 13); subscription_changed has ~3. On a fair, co-existing window (Jun 24–Jul 14) it's 24 credit-toppers vs 14 subscribers = ~1.7:1, not 9:1. Because all 14 subscription_changed users are <3 weeks old, their retention curves are immature (wk0 35%, wk1 18%, then no mature data), so a credit-vs-subscription retention comparison is not yet possible here. Reconciled subscription retention/MRR stays a Stripe question (deferred).
+
+- **Metric:** credit_topup:subscription_changed user ratio (fair window Jun24-Jul14) = **1.7x (24 vs 14)**
+- **Theme/angle:** Monetization & pay-drivers — Credit purchase vs subscription conversion: which path retains better (event-availability)
+- **Segment:** overall  ·  **Sources:** mixpanel
+- **Confidence:** high (event first-fire dates + fair-window uniques, prod); the ratio itself is small-N
+- **Caveat:** subscription_changed went live ~Jun 22-24 2026 (0 firings before), so any lifetime credit-vs-sub comparison is an instrumentation artifact — use the Jun24+ window only. Both are low-volume (24 and 14 users over 3 weeks); ratios are directional, not stable. Subscription retention is unmeasurable in Mixpanel until cohorts mature; true subscription conversion/MRR is Stripe-only (deferred). Uniques are distinct_id, a company proxy, not company_id-deduped.
+
+---
+
 ### 2026-07-13 — 🆕 NEW — Template gallery leaks 82% at preview->install; two scheduling templates convert 0%
 
 The template gallery has a real intent-vs-action leak: of 147 unique users who opened a template preview (prod, last 180d, 30d conversion window), only 27 went on to install any template = 18% overall. That is 120 companies who signalled template intent and installed nothing. At the per-template level, preview->install conversion ranges from 0% to 36%: Identity Verification 36% (5/14), Jelou Shop in-chat payment 26% (7/27), Shopify native checkout 24% (9/37) and Bitrix Lead Capture 20% (1/5) convert best, while WooCommerce 11% (2/18) and Schedule w/ Google Calendar 12% (4/32) lag. Two gallery templates are outright dead ends: "Appointment scheduling" (0/13) and "Schedule with Microsoft Outlook Calendar" (0/6) drew 19 previewers between them and converted ZERO. Crucially "Schedule with Google Calendar" DOES convert (12%), so scheduling is not dead as a category -- the Outlook and generic-appointment templates specifically are. The install side also reveals a gallery/catalog mismatch: previews fire on ~8 curated English-named templates, but installs sprawl across ~40 mostly custom/Spanish names (Agente Shopify 39, Tienda Jelou Shop 14), i.e. most installs come from outside the previewable gallery.

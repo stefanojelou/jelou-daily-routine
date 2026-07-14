@@ -32,8 +32,12 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 
 ## Monetization
 - What is the most common action sequence in the 48h before a company's first real (amount>0) charge?
-- Do credit top-up buyers or first-time subscribers retain/expand better over the following month?
+- ~~Do credit top-up buyers or first-time subscribers retain/expand better over the following month?~~ (2026-07-14: not answerable in Mixpanel yet — subscription_changed only started firing ~Jun 24 2026, so all 14 subscribers have <3wk immature windows. Credit-toppers alone: agent-activity retention decays 46%→14%→6% over wk0-2. Revisit once subscription cohorts mature / Stripe is wired.)
 - What is the realized conversion from `upgrade_cta_clicked` to an actual paid charge, by source?
+- Now that subscription_changed is live (~Jun 24 2026), re-run credit-topup vs subscription retention once the subscriber cohort has a mature ≥4-week window (≈late Jul).
+- Do the ~79%-organic credit-toppers differ from the ~21% media ones in top-up amount, repeat-topup rate, or agent-activity retention — i.e. does channel predict credit-buyer quality?
+- Are credit-toppers and subscribers genuinely disjoint populations, or a funnel? (lifetime funnel showed 3% topup→sub and 14% sub→topup, but both are confounded by subscription_changed's Jun-24 start — re-test on the co-existing window.)
+- What do credits actually get spent on (agent_message_sent vs campaign_sent vs other) — validate agent_message_sent as the right post-topup retention proxy.
 
 ## Retention
 - Are recent signup-month cohorts retaining better or worse than older ones at week 2 and week 4?
