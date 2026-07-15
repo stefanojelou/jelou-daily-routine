@@ -6,6 +6,18 @@ re-reported.
 
 ---
 
+### 2026-07-15 — 🆕 NEW — Agent-usage retention is a home-market story — Ecuador returns 38% wk1 vs CO/MX ~16-17% and Peru ~3%
+
+Agent-usage return (resurrection) is starkly uneven by geography, and it inverts the naive 'Ecuador is just high-volume' read. On clean post-instrumentation cohorts (agent_message_sent was newly instrumented ~May 18 — 0 unique users before, 1,123 the week of — so the May 18–24 burst is existing users getting their FIRST TRACKED message, not real onboarding; excluded), weekly unbounded return curves diverge ~13x across markets. Ecuador (home market, ~1,495 first-time agent users) returns wk1 38%, and stays durable: wk2 34%, wk3 31%, wk4 27%, wk6 24%. The expansion markets retain roughly HALF as well: Colombia (N~576) wk1 16% / wk3 15%, Mexico (N~395) wk1 17% / wk3 14%. And Peru — the #4 market by agent volume (N~463) — is a near-total retention dead zone: wk1 ~3%, and flat ~3-4% thereafter, i.e. users fire the agent once and essentially never come back. (US wk1 22% but N~155/small, noisy.) So Ecuador is not merely 50% of volume (Jul 7 finding) — per user it is also ~2.3x stickier than the next markets, while Peru converts real volume into ~zero retention. The 'invert' lens lands on Peru: the market that most conspicuously does NOT come back.
+
+- **Metric:** wk1 agent-usage return rate, home market Ecuador (clean cohort) = **38**
+- **Theme/angle:** Retention & churn cohorts — Resurrection/return by geography — who comes back and who never does (agent usage)
+- **Segment:** by geography (mp_country_code)  ·  **Sources:** mixpanel
+- **Confidence:** medium-high (return curves on clean mature cohorts; N solid for EC/CO/MX/PE; distinct_id not company-deduped; US small-N)
+- **Caveat:** Mixpanel unbounded weekly retention on agent_message_sent (canonical usage), prod, cohort window May 25–Jul 1 2026 (mature, ≥2 wk). Cohort unit is distinct_id (a user/company proxy), NOT company_id-deduped — country-level rates could be swung by a few large accounts (esp. Peru's near-zero, which may be one/few churned cos, and Ecuador's high rate if a big active co dominates). agent_message_sent only instrumented ~May 18 so pre-May-25 cohorts are rollout artifacts (the contaminated full-range Ecuador avg reads a misleading 8% because a May 20 spike of 650 first-tracked users returned at 4%); clean-window figures used throughout. mp_country_code is geo-IP at event time, not billing country. 'Resurrection' here = unbounded weekly RETURN (includes users who skip weeks then come back); the specific trigger EVENT of a comeback (backlog Q) is not yet isolated — Mixpanel MCP exposes no JQL groupByUser, only report types. US small-N. 'marks' not 'drives'.
+
+---
+
 ### 2026-07-14 — 🆕 NEW — Credit top-ups are small, organic-led, and don't stick — 79% organic, $10 median, agent-use decays 46%->14%->6%
 
 Characterizing the one monetization path with real history (credit_topup, 120 unique users May 13–Jul 14, prod). Amounts are small: median $10, mean $15.2, p90 $20, ~$3,360 total intent-to-pay over 2.5 months (pre-checkout, credits only — not reconciled revenue). By acquisition channel, credit-buying is NOT a media story: 79% of buyers (95/120) are organic/direct (no initial_utm_source), ~21% media (Google Ads 13, Meta fb/ig 5, other 7) — i.e. it mirrors the ~21% media share of the signup base, so paid channels buy proportionally, not disproportionately. And top-ups don't mark stickiness: on a weekly born->return curve (credit_topup -> agent_message_sent), 46% send an agent message the same week, but only 14% the next week and 6% two weeks out. Buying credits marks a moment of intent, it doesn't mark a retained user.

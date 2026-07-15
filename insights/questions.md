@@ -43,6 +43,10 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 - Are recent signup-month cohorts retaining better or worse than older ones at week 2 and week 4?
 - What activity-decay pattern precedes a company going silent (any early-warning signal)?
 - Among resurrected (dormant→active) companies, what event marks the comeback?
+- Peru is the #4 agent-volume market yet returns at ~3% wk1 (vs Ecuador 38%). Is that near-zero retention driven by one/few churned accounts, or broad across Peruvian companies? (needs company_id dedup — no JQL groupByUser in Mixpanel MCP; revisit when DB/Stripe wired.)
+- Why does Ecuador retain agent usage ~2.3x better than Colombia/Mexico (38% vs 16-17% wk1)? Product-language/localization, sales-touch, account size, or self-serve-vs-managed mix by market?
+- Does the geographic retention gap (EC ≫ CO/MX ≫ PE) hold on node_used (builder) cohorts too, or is it specific to agent messaging?
+- Does per-market agent-usage retention track per-market revenue (credit_topup / Stripe) — i.e. is Ecuador's stickiness monetized, and is Peru's volume worthless? (needs Stripe)
 
 ## Usage depth
 - ~~What share of all workflow executions come from the top 1% / 10% of companies?~~ (2026-07-07: agent_message_sent proxy — top 1% of companies = 28.7%, top 10% = 61.7%, Gini 0.70; 48% of companies sent ≤2 msgs in 90d. Confirm on true ClickHouse executions when wired.)
@@ -62,3 +66,5 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 - If signup_completed is broken, since exactly when, and are onboarding_started / first-session events still firing for brand-new distinct_ids (which would confirm tracking-only, not a real outage)?
 - Do new distinct_ids still appear in node_used / agent_message_sent after Jul 3 (i.e. are new users still arriving despite the flat signup event)? (2026-07-09: node_used/agent_message_sent/tester_session_started all recovered to normal volume Jul 6-8 while signups stayed floored — points to a broken signup_completed event, not a real new-user outage. Still needs new-vs-returning distinct_id split to confirm.)
 - Since exactly which deploy/commit did signup_completed break (Jul 2→3 boundary)? Bisect against release history once repo/CI access is available.
+- Weekly agent_message_sent UNIQUE users slid 488 (wk Jun 22) → 391 (Jun 29) → 215 (Jul 6) even though node_used total stayed healthy (~1.5-1.7k/wk). Is agent-MAU genuinely shrinking, or is it a knock-on of the signup_completed collapse (fewer new users → fewer first agent messages), or a second tracking regression? Split new-vs-returning distinct_ids to disentangle.
+- agent_message_sent was only instrumented ~May 18 2026 (0 unique users before). What was the pre-May-18 agent-usage event (if any), and can earlier agent history be recovered for longer retention cohorts?
