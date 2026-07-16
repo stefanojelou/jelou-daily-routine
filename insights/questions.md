@@ -51,7 +51,10 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 ## Usage depth
 - ~~What share of all workflow executions come from the top 1% / 10% of companies?~~ (2026-07-07: agent_message_sent proxy — top 1% of companies = 28.7%, top 10% = 61.7%, Gini 0.70; 48% of companies sent ≤2 msgs in 90d. Confirm on true ClickHouse executions when wired.)
 - Do companies with high workflow error_rate_pct churn faster than clean-running ones?
-- Does building SKILL-type nodes (vs only tools) mark a stickier user?
+- ~~Does building SKILL-type nodes (vs only tools) mark a stickier user?~~ (2026-07-16: reframed to the skill lifecycle — skills are created prolifically but rarely deployed. 761 users / 542 companies created 2,894 skills in 90d, but only ~1 in 4 companies (28%; 12% on a strict 30d ordered funnel) ever adds a skill to the canvas; 57% of creators are one-and-done. Not a device artifact — creation is 92% desktop. Open: do the ~25% who DEPLOY retain/monetize better than create-only users?)
+- Do skill-DEPLOYERS (skill_used) retain and monetize better than create-only users? Needs $user-profile company_id join to agent_message_sent / credit_topup (agent_message_sent has no event-level company_id).
+- Why is the create→canvas step leaking 72–88%? Are skills being created AI-assisted in bulk (2,894 skills / 761 users) as throwaway experiments, or is the canvas-drop UX the blocker? Cross-check with node_config / tester events.
+- Does a created-but-never-deployed skill predict churn faster than never-creating a skill at all (i.e. is abandoned exploration a worse signal than no exploration)?
 - Are the top-1% "power" companies (30 accounts, ~29% of agent volume) the same ones that pay, and what's the revenue risk if any churns? (needs Stripe)
 - Does the Ecuador concentration (50.5% of agent usage) match revenue concentration, or do other markets monetize better per active company? (needs Stripe)
 - Within the top-decile companies, how many distinct active users per company — is depth driven by a few power-users or broad team adoption?
