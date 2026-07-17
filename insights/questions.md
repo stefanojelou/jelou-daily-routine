@@ -13,7 +13,9 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 - What share of `onboarding_started` never reach `signup_completed`, and where do they die?
 
 ## Activation
-- What is the median time from signup_completed to first agent_message_sent, and how does it differ for eventual payers?
+- ~~What is the median time from signup_completed to first agent_message_sent, and how does it differ for eventual payers?~~ (2026-07-17: median is under 1h — 56% of ALL signups message within 1h, 60% by 1d, 65% by 30d (clean May18–Jun30 cohort, N=3,697). Eventual credit-toppers too small-N (51) to split by speed reliably; revisit with Stripe payers.)
+- Agent-message activation (65%) dwarfs build activation (13%) on the same cohort — which one actually predicts week-2/week-4 return and credit_topup? Is messaging a low-bar vanity activation or the real leading indicator?
+- Mobile signups converse at ~60% (near desktop 69%) but build at ~2.9%. Do mobile-signup messagers RETAIN (wk2+), or do they message once and vanish — i.e. is mobile conversation real activation or a dead-end without the builder?
 - Which single activation milestone most strongly predicts week-2 return?
 - ~~How large is the dead-on-arrival cohort (signed up, zero activation events), and which channel produces it most?~~ (2026-07-06: ~55% of signups are mobile and only ~0.3% ever build; paid channels are 77% mobile → 5-7% build-activation vs 15% organic.)
 - Do the mobile signups ever come back on desktop later (cross-device activation), or are they permanently lost? (split by distinct_id)

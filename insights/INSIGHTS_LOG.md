@@ -6,6 +6,30 @@ re-reported.
 
 ---
 
+### 2026-07-17 — 🆕 NEW — Time-to-first-conversation is a first-hour event -- 56% of ALL signups message an agent within 1h
+
+Time-to-first-conversation is even more front-loaded than time-to-first-build. Of ALL 3,697 signups (not just activators), 56% (2,085) send their first agent message within 1 HOUR of signup, 60% within 1 day, 65% within 7 days -- and the 30d rate is also 65%, i.e. after day 7 you gain essentially nothing. Conditional on ever messaging, 87% (2,085/2,398) do it in hour one. The signup->first-conversation window is the same session; onboarding that isn't in-product/first-hour misses it entirely. (Compare the Jul 10 build finding: 66% of build-ACTIVATORS build within 1h -- here it's 56% of ALL signups messaging within 1h.) Cohort-month lens is stable: May 69%, June 61% (June marginally truncated). A thin monetization tail follows: 51 of the cohort (~1.4% of signups, ~2.1% of messagers) topped up credits within 30d, median ~2.8d after signup -- small-N, pre-settlement intent only.
+
+- **Metric:** first-hour share of ALL signups sending an agent message = **56**
+- **Theme/angle:** Cross-source anomaly & wildcard — Activation & time-to-milestone -- signup->first agent_message_sent timing distribution; does speed predict outcome
+- **Segment:** by time-to-milestone (cumulative CDF)  ·  **Sources:** mixpanel
+- **Confidence:** high (cohort N=3,697; cumulative funnel windows 1h/1d/7d/30d; monetization tail small-N)
+- **Caveat:** Same clean cohort as companion finding (prod signups May 18-Jun 30). CDF built from cumulative funnel conversion windows (1h 56%, 1d 60%, 7d 65%, 30d 65%), not a ttc histogram. June cohort (61%) marginally truncated (signups after ~Jun 17 have <30d to today), but since ~92% of eventual messagers fire by day 1 the understatement is minor. Monetization outcome (credit_topup) is N=51, pre-checkout intent only (credits, not reconciled revenue; subscriptions/MRR are Stripe-only, deferred) -- too small to claim speed 'predicts' paying; reported as directional. distinct_id not company-deduped.
+
+---
+
+### 2026-07-17 — 🆕 NEW — Mobile isn't dead-on-arrival -- it activates via conversation (60%), not building (2.9%)
+
+The team's activation KPI (node_used, the desktop drag-drop builder) tautologically writes off the mobile half of signups -- but on the RIGHT yardstick, agent conversation, mobile is alive. On a clean post-instrumentation cohort (3,697 prod signups May 18-Jun 30; agent_message_sent went live May 19, so no rollout contamination), 65% (2,398) send an agent message within 30d vs only 13% (482) who ever add a node -- a 5x gap on the IDENTICAL cohort. And messaging shows near device-parity: mobile signups activate at 60% (Android 63% 909/1,454, iOS 51% 181/353 = 1,090/1,807) vs desktop 69% (Windows 71% 1,005/1,406, Mac 63% 266/419 = 1,308/1,890) -- a ~9pt gap, NOT the ~9x gap building shows (mobile 2.9% vs desktop 27%, prior ledger). So the device barrier is specific to the builder canvas, not the product: mobile signups are 'dead-on-arrival' only if you insist on measuring them by a desktop-only feature. They converse at roughly the same rate as desktop; they just can't drag nodes.
+
+- **Metric:** mobile signup->agent-message 30d activation = **60**
+- **Theme/angle:** Cross-source anomaly & wildcard — Activation & time-to-milestone -- agent-message activation vs build activation, and the mobile device barrier
+- **Segment:** by device ($os at signup)  ·  **Sources:** mixpanel
+- **Confidence:** medium-high (cohort N=3,697 signups; mobile N=1,807, desktop N=1,890; clean post-instrumentation window; funnel sequential signup->message)
+- **Caveat:** Cohort = prod signups May 18-Jun 30 2026 (agent_message_sent first fired May 19, so window is clean of rollout artifacts; funnel cohorts on signup in-window then counts message within 30d on any device). Unit is distinct_id, NOT company_id-deduped. 'agent_message_sent' = 'AI Assistant Message Sent' (canonical usage event used across the ledger); it could include builder-copilot/assistant messages as well as end-user agent chat, but it is user-driven not automated (varies 51-71% by device and 35% of signups never fire it -- automation would be ~flat/~100%). node_used comparison (2.9%/27%) is from the prior ledger (cohort-by-signup-device, any-device). 'marks' the activation surface, does not by itself 'drive' retention/revenue -- retention/monetization linkage is thin here (see companion finding).
+
+---
+
 ### 2026-07-16 — 🆕 NEW — Skills are created but not deployed -- only ~1 in 4 creators ever puts a skill on the canvas
 
 Skills are created prolifically but almost never deployed to a workflow. In the last 90d (prod), 761 unique users across 542 companies fired skill_created, generating 2,894 skills (~3.8 per creating user) -- yet only ~1 in 4 skill-creating companies ever adds a skill to the canvas (skill_used = 'Skill Added to Canvas'): 153/542 companies = 28%, 178/761 users = 23% (unordered, 90d), and just 89/754 = 12% on a strict ordered 30-day created->deployed funnel. Creation itself is shallow and one-and-done: 57% of creators (437/761) made exactly one skill, 19% made two, and only 24% made >=3. Critically, this deployment leak is NOT the mobile-can't-build story: skill_created is already 92% desktop (Windows 437, Mac 227, Linux 81 vs only 60 mobile) and skill_used is 100% desktop, so even among desktop creators only ~25% (178/701) ever deploy. Skills look like an exploration/toy surface -- users spin them up (often AI-assisted, many at once) and abandon them before wiring one into a live agent. The create->canvas step is the real activation milestone for the skills feature, and it's leaking ~72-88%.
