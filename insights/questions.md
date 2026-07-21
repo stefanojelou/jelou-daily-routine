@@ -23,6 +23,9 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 - What is the CAC-adjusted view: does paid spend on mobile-heavy channels (Meta, Google) ever recover given ~5% build-activation?
 - Given 86% of build-activators fire within 24h of signup, does the ~14% "slow" cohort (day 1-14) retain/pay any differently than the same-session builders — i.e. is a delayed first build a worse or equal signal?
 - Does the same first-hour front-loading hold for the OTHER milestones (skill_created, tester_session_started, agent_message_sent), or is node_used uniquely same-session — and which milestone has the longest tail worth a re-engagement nudge?
+- Builder self-retention (43% wk1, ~32% wk6) is ~2x agent-message self-retention (24% wk1, ~16% wk6) — but node_used has long pre-window history so builder births may include veterans. Re-run on a TRUE first-ever-builder cohort (server-side / DB user-created join) to confirm the gap magnitude isn't an event-age artifact.
+- Do the users who do BOTH (build AND message) retain better than either single-surface cohort — is multi-surface activation the real stickiness signal rather than which surface?
+- Reframe of the reach-vs-depth tension: agent activation reaches ~5x more signups (65% vs 13%) but retains ~2x worse per user; net wk1-retained share is ~15.6% (agent) vs ~5.6% (builder) of signups. Which surface should onboarding optimize FOR — the wider net or the deeper hook — and does a build nudge for the messager cohort lift their retention toward the builder curve?
 
 ## Templates
 - Does installing a template shorten time-to-activation, or just correlate with users who'd activate anyway?
