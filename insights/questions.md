@@ -34,6 +34,9 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 - Why do "Appointment scheduling" (0/13) and "Schedule with Microsoft Outlook Calendar" (0/6) convert 0% preview→install while "Schedule with Google Calendar" converts 12% — broken install path, missing integration, or genuinely unwanted?
 - Most installs come from ~40 custom/Spanish templates NOT in the previewable gallery (Agente Shopify 39, Tienda Jelou Shop 14) — how are those discovered/installed if not via the preview gallery, and should the top custom ones be promoted into the gallery?
 - Of the 27 gallery-preview installers, how many go on to build (node_used) vs the ~40 off-gallery installers — does gallery provenance predict activation?
+- Template-install count is a monotonic dose-response marker of agent/build depth, but the JUMP is at the 2nd install (1 install ≈ non-installer, median 4 vs 3; 2+ ≈ median 14+, mean ~62). What triggers a 2nd install — is there a product nudge that converts single-installers (58% of installers) into multi-installers, and would that raise depth or merely re-mark already-deep users?
+- Is the install→depth link TIME-ORDERED (installs precede the deep usage) or do deep users accumulate installs afterward? Needs event-time sequencing / DB timestamps to separate mark-vs-drive on templates the way the Jun 24 pay finding couldn't.
+- Do the ~40 multi-install (2+) users retain (wk2/wk4) and monetize (credit_topup) better than single-installers and non-installers, or is depth-in-window all they share?
 
 ## Monetization
 - What is the most common action sequence in the 48h before a company's first real (amount>0) charge?
