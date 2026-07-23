@@ -6,6 +6,42 @@ re-reported.
 
 ---
 
+### 2026-07-23 — 🆕 NEW — The pay-intent funnel the team just wired up can't be measured -- upgrade_cta_clicked is brand-new (0 before Jul 2026, 7 firings) and subscription_changed is still newborn
+
+Why today's assigned angle (upgrade_cta_clicked -> subscription_changed by source) is unanswerable, and it's a live instrumentation gap worth flagging. upgrade_cta_clicked fired ZERO times in the 12 months before July 2026 and only 7 times (6 unique users) so far this month -- it was just instrumented. subscription_changed remains newborn too (20 unique users / 31 events in 90d, live since ~Jun 24 per prior ledger). So the designated intent->conversion funnel has N<10 at the top and N<25 at the bottom: it cannot be measured in Mixpanel yet. Any dashboard wired to upgrade_cta_clicked as the upgrade-intent KPI is effectively blind -- the real, high-volume intent signal is page_visited_settings_billing (1,187 users). Directly answers the backlog question 'realized conversion from upgrade_cta_clicked to a paid charge, by source': not possible yet.
+
+- **Metric:** upgrade_cta_clicked unique users, 90d (0 before Jul 2026) = **6**
+- **Theme/angle:** Monetization & pay-drivers — upgrade_cta_clicked -> subscription_changed feasibility (assigned angle) -- instrumentation maturity
+- **Segment:** overall  ·  **Sources:** mixpanel
+- **Confidence:** high (event first-fire dates + 90d uniques, prod; the near-zero volume is the whole point)
+- **Caveat:** upgrade_cta_clicked: 0 firings Jul 2025-Jun 2026, 7 firings / 6 users in Jul 2026 -- treat as a just-shipped event, not a real behavioral signal. subscription_changed newborn (~Jun 24). Revisit both once they mature (a few more weeks of volume). Reconciled subscription conversion/MRR remains Stripe-only (deferred).
+
+---
+
+### 2026-07-23 — 🆕 NEW — Monetization intent is organic at the INTENT stage too -- 90% of billing-page viewers are organic and conversion is flat media vs organic
+
+Extends the Jul-14 'credit-buying is not a media story' finding upstream from the ACTION stage to the INTENT stage. Of 1,177 billing-page viewers (prod 90d), 90% (1,060) are organic/direct (no initial_utm_source) -- even more organic than the ~79% credit-buyer base and ~79% signup base. Paid channels barely reach the billing page at all (~10% of viewers: Google Ads 48, fb 23, adwords 17, ig 11) AND convert at the same rate: organic 5.8% (61/1,060) vs Google Ads 8.3% (4/48, small-N) vs fb 4% (1/23), ~6% either way. So media buys neither the upgrade intent nor a better intent->pay conversion -- monetization intent is an engaged-organic-user behavior end to end.
+
+- **Metric:** organic share of billing-page (upgrade-intent) viewers = **90**
+- **Theme/angle:** Monetization & pay-drivers — Upgrade-intent by media source -- does channel drive billing intent or its conversion
+- **Segment:** by acquisition channel (initial_utm_source)  ·  **Sources:** mixpanel
+- **Confidence:** medium-high (N=1,177 viewers; organic N=1,060 solid; per-media buckets small-N 11-48, directional)
+- **Caveat:** initial_utm_source on the $user profile; undefined treated as organic/direct (~90% here). Per-channel conversion buckets are small-N (Google Ads 48, fb 23, ig 11) so the media-vs-organic rate parity is directional, but the 90% organic SHARE is robust. Same credit_topup pre-settlement/credits-only caveat as the companion finding. distinct_id, not company-deduped.
+
+---
+
+### 2026-07-23 — 🆕 NEW — Only ~6% of billing-page visitors ever top up -- a 94% upgrade-intent->pay leak, and the billing page (1,187 users) IS the intent signal since upgrade_cta_clicked is dead
+
+Today's assigned pay-intent funnel (upgrade_cta_clicked -> subscription_changed) is unmeasurable, so I pivoted to the intent signal that actually fires: page_visited_settings_billing. It is the dominant, usable upgrade-intent event -- 1,187 unique users in 90d (prod) vs just 6 for upgrade_cta_clicked (~200x). Of those billing-page viewers, only ~6% (72/1,177) go on to fire a credit_topup within 30d, avg ~5 days later -- i.e. ~94% of people who open the billing/settings page never top up. This is the first time the intent->payment CONVERSION has been sized (prior ledger characterized only the ~120 buyers themselves). The leak is broadly flat across geography (big markets 4-8%: Ecuador 6.6% N=455, Mexico 7.1% N=154, Colombia 3.9% N=180, Peru 8.3% N=60) with no meaningful geo differentiation -- Ecuador dominates billing-intent VOLUME (39% of viewers) exactly as it dominates usage, but not the conversion RATE. Note this is credit-topup intent (pre-settlement, credits only); subscription conversion stays a Stripe question.
+
+- **Metric:** billing-page -> credit_topup 30d conversion = **6**
+- **Theme/angle:** Monetization & pay-drivers — Upgrade-intent -> payment conversion (billing-settings page as the real intent signal)
+- **Segment:** overall (geography lens: flat)  ·  **Sources:** mixpanel
+- **Confidence:** medium-high (funnel unique, prod 90d, 30d conversion window; N=1,177 viewers / 72 conversions; geo big-markets solid, small markets anecdotal)
+- **Caveat:** credit_topup fires pre-checkout so it's intent-to-pay (credits only), not reconciled revenue; subscription conversion is Stripe-only (deferred). Funnel is ordered page_visited_settings_billing -> credit_topup, unique users, 30d window; recent viewers (<30d) have partial windows so 6% is a mild UNDER-count of the fully-mature rate. Unit is distinct_id, NOT company_id-deduped. mp_country_code is geo-IP at event time. Conversion shows NO reliable time trend -- a naive split at May 20 looked like a doubling (4.0% -> 9.6%) but a clean pre/post free-limit-cut split (Jun 11) is flat (5.5% -> 6.3%) and the daily trend is noise, so the apparent shift is a window-boundary artifact, NOT a June-11 pricing effect. 'marks' intent, does not by itself 'drive' payment.
+
+---
+
 ### 2026-07-22 — 🆕 NEW — Templates mark DEPTH, not just pay -- but only the 2nd+ install; a single install barely beats non-installers
 
 Todays angle -- do template installers use agents more DEEPLY once activated (not just pay)? -- has a sharp, dose-response answer among agent-messagers (prod, 90d). Non-installers (N=3,365) have a median of 3 agent messages/user (mean 7.3). Installing ONE template barely moves it: N=56, median 4, mean 11.0 -- statistically a rounding error above non-installers. The depth signal is entirely in the SECOND-and-beyond install: 2-3 installs (N=21) run median ~14-15 (mean ~45), and the 2+ group overall (N=40) averages ~62 agent messages/user = ~8.4x non-installers (mean) / ~5x on the tail-robust median. It climbs monotonically further for the handful who install many (5 installs N=4 median 61; 10 installs N=1 median 211; 31 installs N=1 median 321). The same dose-response holds on the OTHER surface, building: node_used median 3 (0 installs) -> 4 (1) -> 12+ (2+), so multi-install marks GENERAL engagement depth, not agent-chat specifically. Channel lens (todays segment): installers are 89% organic/direct (85/95), even more organic than the ~79% base -- template-installing is an engaged-organic-user behavior, not media-driven, echoing the credit-buyer channel mix. Read carefully: this MARKS serious users, it does not DRIVE depth. Reverse causation is the likely mechanism (deep/committed users explore more templates), matching the prior Jun 24 finding that template pay-lift is a fragile marker not a driver -- this extends that verdict from PAY to USAGE DEPTH, and pinpoints the marker as the 2nd install, not the 1st.
