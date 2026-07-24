@@ -52,7 +52,10 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 
 ## Retention
 - Are recent signup-month cohorts retaining better or worse than older ones at week 2 and week 4?
-- What activity-decay pattern precedes a company going silent (any early-warning signal)?
+- ~~What activity-decay pattern precedes a company going silent (any early-warning signal)?~~ (2026-07-24: there is NO gradual decay to catch at the agent-usage grain — churn is a WEEK-1 CLIFF. Only ~25% of agent-messagers return the following week; the ~75% one-and-done is set in week 1. Survivors then plateau (weekly active ~flat wk2-6, ~79% of wk1 by wk6). The one leading indicator is week-1 no-return; there is no slow-fade cohort. Same cliff-then-plateau shape on the builder, shallower (57% cliff, ~32% plateau). Company-level, not distinct_id, needs Neon/Stripe.)
+- Does WEEK-1 INTENSITY (number of active days or messages in the first week) predict which of the ~25% survivors stay past week 4 — i.e. is there a within-week-1 dosage threshold that separates durable from fragile survivors? (needs per-user event counts / JQL groupByUser — not in Mixpanel MCP; revisit with DB.)
+- The wk0→wk1 cliff is the whole churn story — what happens IN week 1 for the 25% who return vs the 75% who don't (2nd message same-session? a build? a template install?)? Isolating the week-1 action that separates the two cohorts is the highest-leverage retention question.
+- Does the cliff-then-plateau hold at the COMPANY grain (company_id-deduped) or is it a distinct_id artifact — do companies show a gentler multi-week decay that user-level self-retention hides? (needs company dedup / DB.)
 - Among resurrected (dormant→active) companies, what event marks the comeback?
 - Peru is the #4 agent-volume market yet returns at ~3% wk1 (vs Ecuador 38%). Is that near-zero retention driven by one/few churned accounts, or broad across Peruvian companies? (needs company_id dedup — no JQL groupByUser in Mixpanel MCP; revisit when DB/Stripe wired.)
 - Why does Ecuador retain agent usage ~2.3x better than Colombia/Mexico (38% vs 16-17% wk1)? Product-language/localization, sales-touch, account size, or self-serve-vs-managed mix by market?
