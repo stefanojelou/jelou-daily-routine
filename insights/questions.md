@@ -72,7 +72,11 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 - Are the top-1% "power" companies (30 accounts, ~29% of agent volume) the same ones that pay, and what's the revenue risk if any churns? (needs Stripe)
 - Does the Ecuador concentration (50.5% of agent usage) match revenue concentration, or do other markets monetize better per active company? (needs Stripe)
 - Within the top-decile companies, how many distinct active users per company — is depth driven by a few power-users or broad team adoption?
-- What separates the 65% of builders who add <5 nodes then stop from the 6% who add ≥40 — is there an early node-count threshold that predicts becoming a power account?
+- What separates the 65% of builders who add <5 nodes then stop from the 6% who add ≥40 — is there an early node-count threshold that predicts becoming a power account? (2026-07-27 partial: the depth cliff is the 2nd action — 30% of builders never add a 2nd node, then step-conversion RISES monotonically to 91% by node 8 (survivorship ramp); skills 2x steeper, 59% never make a 2nd. The threshold that "locks in" a builder is ~4-5 nodes. Still open: does crossing node #2 causally predict power-account/pay, or just mark it?)
+- The depth cliff is a distinct_id read (30% node one-and-done, 59% skill one-and-done). Does it hold at COMPANY grain — i.e. do companies whose nodes/skills spread across teammates show a gentler 1st→2nd cliff? (needs company_id dedup / DB.)
+- Node 1→2 is both the biggest drop AND the slowest step (~2.6 days for nodes, ~5.8 days for skills). Is the multi-day gap "left and came back later" (a re-engagement/nudge opportunity) or "same-session but slow"? Split the 1st→2nd interval into same-session vs cross-session to size an in-first-session-2nd-node nudge.
+- Do builders who cross the 2nd-node cliff retain (wk2/wk4) and monetize (credit_topup) materially better than one-and-done builders — is "placed a 2nd node" the depth analogue of the week-1 return cliff as a leading indicator?
+- Why do skills stall 2x harder than nodes at the 2nd step (41% vs 70% continue)? Is a single skill genuinely useful on its own (so no need for a 2nd) while a single node is not, or is skill-authoring friction higher after the first?
 
 ## Cross-source / wildcard
 - Which company has the highest assistant build cost (Neon) relative to realized executions (ClickHouse)?
