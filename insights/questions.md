@@ -104,3 +104,9 @@ Format: one question per `- ` bullet. Keep them specific and data-answerable.
 - The email/password path sheds 60% at the email→password step (409→162), and only 7% of that drop is users switching to SSO — so it's genuine abandonment. WHY do email-path users bail after typing an email but before committing a password (form friction, password rules, second thoughts, bot/abandoned-email noise)? Needs session replay / UX, not Mixpanel counts.
 - company_profiling_step_completed was only instrumented ~Jul 1 2026 — once it has clean post-collapse history, does the profiling step add a third material leak, and does it differ SSO vs email-path?
 - Does signup-path choice (Google SSO vs email/password) predict downstream activation/retention (do SSO signups build/converse/retain differently than email-path signups)? Cohort on path event, measure node_used / agent_message_sent within 14-30d.
+
+<!-- appended 2026-07-31 (template shelfware / install-exercise) -->
+- Does formally TESTING an installed template (tester_session_started within 30d) predict downstream retention/pay better than merely conversing with the agent — i.e. is the test step the real activation milestone for installers, worth a nudge for the ~57% who skip it?
+- Why do US template installers run the agent at 81% but formally test at only ~22% (2/9) — is this a genuine behavior (they trust/ship without testing) or a small-N artifact? Re-check when the US installer base grows.
+- Company-dedup the install→test funnel (distinct_id → company_id) to see whether the 43% test-rate is a per-company or per-user leak, and whether Ecuador's 55% edge survives dedup.
+- Does the install→test leak differ by WHICH template was installed (the ~40 sprawled custom/Spanish-named templates vs the ~8 curated gallery ones)?
